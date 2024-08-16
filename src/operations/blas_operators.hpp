@@ -273,17 +273,22 @@ struct AbsoluteAddOperator : public Operators {
   }
 };
 
+template <typename T>
+T abs(T x) {
+  return x > 0 ? x : -x;
+}
+
 struct IMaxOperator : public Operators {
   template <typename lhs_t, typename rhs_t>
   static PORTBLAS_INLINE rhs_t eval(const lhs_t &l, const rhs_t &r) {
-    if (AbsoluteValue::eval(static_cast<lhs_t>(l).get_value()) <
-            AbsoluteValue::eval(static_cast<rhs_t>(r).get_value()) ||
-        (AbsoluteValue::eval(static_cast<lhs_t>(l).get_value()) ==
-             AbsoluteValue::eval(static_cast<rhs_t>(r).get_value()) &&
-         l.get_index() > r.get_index())) {
-      return static_cast<rhs_t>(r);
+    if (abs(static_cast<lhs_t>(l).get_value()) >
+            abs(static_cast<rhs_t>(r).get_value()) ||
+        (abs(static_cast<lhs_t>(l).get_value()) ==
+             abs(static_cast<rhs_t>(r).get_value()) &&
+         l.get_index() < r.get_index())) {
+      return static_cast<rhs_t>(l);
     } else {
-      return static_cast<lhs_t>(l);
+      return static_cast<lhs_t>(r);
     }
   }
 
