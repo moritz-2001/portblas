@@ -85,7 +85,9 @@ PORTBLAS_INLINE void IndexMaxMin<is_max, is_step0, lhs_t, rhs_t>::eval(
 
   // First loop for big arrays
   for (int id = lid; id < size; id += loop_stride) {
-    val = op::eval(val, rhs_.eval(id));
+    //val = op::eval(val, rhs_.eval(id));
+    auto rhsVal = rhs_.eval(id);
+    val = op::eval(val, rhsVal);
   }
 
   const index_t sg_local_id = sg.get_local_id();
