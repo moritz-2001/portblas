@@ -276,7 +276,7 @@ if(${BLAS_ENABLE_BENCHMARK})
 endif()
 
 if (BLAS_BUILD_SAMPLES)
-  add_subdirectory(samples)
+ # add_subdirectory(samples)
 endif()
 
 option(BLAS_ENABLE_AUTO_TUNERS "Whether to enable building GEMM auto tuners" OFF)
@@ -284,5 +284,5 @@ option(BLAS_ENABLE_AUTO_TUNER_MEMPOOL "Whether to enable memory pool for GEMM au
 if(${BLAS_ENABLE_AUTO_TUNERS})
   # Note that the auto tuners are very slow to compile, so we avoid adding
   # them to the ALL target.
-  add_subdirectory(tools/auto_tuner EXCLUDE_FROM_ALL)
+  #add_subdirectory(tools/auto_tuner EXCLUDE_FROM_ALL)
 endif()
