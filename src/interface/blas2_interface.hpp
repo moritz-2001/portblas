@@ -1295,10 +1295,20 @@ typename sb_handle_t::event_t inline _ger(
     container_t0 _vx, increment_t _incx, container_t1 _vy, increment_t _incy,
     container_t2 _mA, index_t _lda,
     const typename sb_handle_t::event_t& _dependencies) {
-  index_t localSize = 32;
-  bool useLocalMem = (_N < 8192 && _M < 8192) ? false : true;;
+
+    auto sgSize = sb_handle.get_queue()
+            .get_device()
+            .template get_info<sycl::info::device::sub_group_sizes>().at(0);
+
+  index_t localSize = 256;
+  bool useLocalMem = (_N < 8192 && _M < 8192) ? false : true;
   index_t nRowsWG = 32;
   index_t nColsWG = 32;
+
+  if (sgSize > 32) {
+      nRowsWG = 64;
+      nColsWG = 64;
+  }
 
 #if defined(INTEL_GPU)
   localSize = 32;
