@@ -271,9 +271,7 @@ if (INSTALL_HEADER_ONLY AND BLAS_BUILD_SAMPLES)
   set(BLAS_BUILD_SAMPLES OFF)
 endif()
 
-if(${BLAS_ENABLE_BENCHMARK})
   add_subdirectory(benchmark)
-endif()
 
 if (BLAS_BUILD_SAMPLES)
  # add_subdirectory(samples)
