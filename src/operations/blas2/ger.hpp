@@ -91,12 +91,10 @@ Ger<lhs_t, rhs_1_t, rhs_2_t>::eval(sycl::nd_item<1> ndItem) {
   const index_t dimC = lhs_.get_size_col();
   const bool id_row_active = id_row0 < dimR;
 
-#ifndef __ADAPTIVECPP__
   const value_t rhs_2 = (subgroup_local_id < col_per_workitem &&
                          id_col0 + subgroup_local_id < dimC)
                             ? rhs_2_.eval(id_col0 + subgroup_local_id)
                             : 0;
-#endif
 
   const value_t scal_rhs_1 = id_row_active ? scalar_ * rhs_1_.eval(id_row0) : 0;
 
@@ -105,11 +103,7 @@ Ger<lhs_t, rhs_1_t, rhs_2_t>::eval(sycl::nd_item<1> ndItem) {
 
   for (index_t sub_id_col = 0; sub_id_col < col_per_workitem; sub_id_col++) {
     const value_t rhs_2_sub_id_col =
-#ifndef __ADAPTIVECPP__
         sycl::group_broadcast(ndItem.get_sub_group(), rhs_2, sub_id_col);
-#else
-        rhs_2_.eval(id_col0 + sub_id_col);
-#endif
     if (id_row_active && id_col0 + sub_id_col < dimC) {
       lhs_.eval(id_row0, id_col0 + sub_id_col) =
           prefetch_lhs_ + scal_rhs_1 * rhs_2_sub_id_col;
